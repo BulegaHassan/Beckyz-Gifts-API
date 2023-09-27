@@ -33,12 +33,20 @@ const GiftSchema = new mongoose.Schema({
   },
   colors: {
     type: [String],
-    default: ["#222"],
+    default: ["pink"],
     required: true,
   },
   rating: {
     type: Number,
     default: 0,
+  },
+});
+
+GiftSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
   },
 });
 
