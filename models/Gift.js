@@ -36,9 +36,17 @@ const GiftSchema = new mongoose.Schema({
     default: ["pink"],
     required: true,
   },
+  featured: {
+    type: Boolean,
+    default: false,
+  },
   rating: {
     type: Number,
-    default: 0,
+    default: 4.5,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
 });
 
