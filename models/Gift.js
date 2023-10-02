@@ -47,6 +47,11 @@ const GiftSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  createdBy: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+    required: [true, "Please provide user"],
+  },
 });
 
 GiftSchema.set("toJSON", {
