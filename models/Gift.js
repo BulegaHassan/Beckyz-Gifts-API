@@ -5,7 +5,7 @@ const GiftSchema = new mongoose.Schema({
     type: String,
     required: [true, "Must provide name"],
     trim: true,
-    maxLength: [25, "name cannot exceed 25 characters"],
+    maxLength: [100, "name cannot exceed 100 characters"],
   },
   price: {
     type: Number,
@@ -25,7 +25,7 @@ const GiftSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, "Please provide gift category"],
-    enum: ["flowers", "ceramics", "jewellery"],
+    enum: ["flowers", "ceramics", "jewellery", "others"],
   },
   inStock: {
     type: Boolean,
@@ -34,7 +34,6 @@ const GiftSchema = new mongoose.Schema({
   colors: {
     type: [String],
     default: ["pink"],
-    required: true,
   },
   featured: {
     type: Boolean,
