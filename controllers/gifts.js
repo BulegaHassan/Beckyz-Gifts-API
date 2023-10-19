@@ -2,6 +2,8 @@ const Gift = require("../models/Gift");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 const path = require("path");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 const getAllGifts = async (req, res) => {
   const gifts = await Gift.find({});
@@ -76,6 +78,26 @@ const uploadImage = async (req, res) => {
   await productImage.mv(imagePath);
   res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
+const uploadGiftsImage = async (req, res) => {
+  const result = await cloudinary.uploader.upload(
+    req.files.image.tempFilePath,
+    {
+      use_filename: true,
+      folder: "becky_gifts", 
+    }
+  );
+  // console.log(result);
+  // After uploading files to server we want to remove tmp folder
+  fs.unlinkSync(req.files.image.tempFilePath);
+  return res.status(StatusCodes.OK).json({ image: { src: result.secure_url } });
+};
 
-
-module.exports = { getAllGifts, getGift, CreateGift, deleteGift, updateGift,uploadImage };
+module.exports = {
+  getAllGifts,
+  getGift,
+  CreateGift,
+  deleteGift,
+  updateGift,
+  uploadImage,
+  uploadGiftsImage,
+};
