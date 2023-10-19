@@ -1,9 +1,10 @@
 const Gift = require("../models/Gift");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
+const path = require("path");
 
 const getAllGifts = async (req, res) => {
-  const gifts = await Gift.find({ createdBy: req.user.userID });
+  const gifts = await Gift.find({});
   res.status(StatusCodes.OK).json({ gifts, amount: gifts.length });
 };
 const CreateGift = async (req, res) => {
@@ -13,8 +14,7 @@ const CreateGift = async (req, res) => {
 };
 const getGift = async (req, res) => {
   const { id: giftID } = req.params;
-  const { userID } = req.user;
-  const gift = await Gift.findOne({ _id: giftID, createdBy: userID });
+  const gift = await Gift.findOne({ _id: giftID });
   if (!gift) {
     throw new NotFoundError(`No gift with id ${giftID}`);
   }
@@ -34,7 +34,7 @@ const updateGift = async (req, res) => {
   const {
     body: { name, price, description, image, category },
     user: { userID },
-    params: { id:giftID },
+    params: { id: giftID },
   } = req;
   if (!name || !price || !description || !image || !category) {
     throw new BadRequestError(`Provide all fields`);
@@ -55,4 +55,27 @@ const updateGift = async (req, res) => {
     .json({ gift, msg: `Gift with id ${giftID} has been updated` });
 };
 
-module.exports = { getAllGifts, getGift, CreateGift, deleteGift, updateGift };
+const uploadImage = async (req, res) => {
+  if (!req.files) {
+    throw new BadRequestError("No file Uploaded");
+  }
+  const productImage = req.files.image;
+  if (!productImage.mimetype.startsWith("image")) {
+    throw new BadRequestError("Please Upload Image");
+  }
+  const maxSize = 1024 * 1024;
+  if (productImage.size > maxSize) {
+    throw new BadRequestError(
+      "Please Upload Image smaller than 1MB"
+    );
+  }
+  const imagePath = path.join(
+    __dirname,
+    "../public/uploads/" + `${productImage.name}`
+  );
+  await productImage.mv(imagePath);
+  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
+};
+
+
+module.exports = { getAllGifts, getGift, CreateGift, deleteGift, updateGift,uploadImage };
