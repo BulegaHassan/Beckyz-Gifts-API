@@ -23,4 +23,14 @@ jobs:
       - name: run tests and collect coverage.
         run: npm run test
       
-  
+  deploy: 
+    name: Deploy with render
+    needs: Install_Lint_Test
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.GIFTS_RENDER_TOKEN }}      
