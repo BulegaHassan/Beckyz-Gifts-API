@@ -3,21 +3,45 @@ require("express-async-errors");
 const express = require("express");
 const app = express();
 const connectDB = require("./db/connect");
-const authenticateUser = require('./middleware/authentication')
+const authenticateUser = require("./middleware/authentication");
 const giftsRouter = require("./routes/gifts");
 const authRouter = require("./routes/auth");
+const morgan = require("morgan");
+
 // error handlers
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
+const fileUpload = require("express-fileupload");
 
+// security packages
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const cors = require("cors");
+const mongoSanitize = require("express-mongo-sanitize");
+
+const cloudinary = require("cloudinary").v2; // use v2 (see cloudinary docs)
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+  secure: true,
+});
+
+app.use(helmet());
+app.use(cors());
+app.use(xss());
+app.use(mongoSanitize());
+
+app.use(morgan("tiny"));
 app.use(express.json());
+app.use(fileUpload({ useTempFiles: true }));
 
 app.get("/", (req, res) => {
   res.send('<h1>Gifts API</h1><a href="/api/v1/gifts">gifts route</a>');
 });
 // routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/gifts",authenticateUser, giftsRouter);
+app.use("/api/v1/gifts", giftsRouter);
 
 // middleware
 app.use(notFoundMiddleware);
