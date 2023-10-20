@@ -14,6 +14,7 @@ const CreateGift = async (req, res) => {
   const gift = await Gift.create(req.body);
   res.status(StatusCodes.CREATED).json({ gift });
 };
+
 const getGift = async (req, res) => {
   const { id: giftID } = req.params;
   const gift = await Gift.findOne({ _id: giftID });
@@ -29,7 +30,7 @@ const deleteGift = async (req, res) => {
   if (!gift) {
     throw new NotFoundError(`No gift with id ${giftID}`);
   }
-  res.status(StatusCodes.OK).json({ msg: `Deleted task with id ${giftID}` });
+  res.status(StatusCodes.OK).json({ msg: `Deleted gift with id ${giftID}` });
 };
 
 const updateGift = async (req, res) => {
@@ -67,9 +68,7 @@ const uploadImage = async (req, res) => {
   }
   const maxSize = 1024 * 1024;
   if (productImage.size > maxSize) {
-    throw new BadRequestError(
-      "Please Upload Image smaller than 1MB"
-    );
+    throw new BadRequestError("Please Upload Image smaller than 1MB");
   }
   const imagePath = path.join(
     __dirname,
@@ -78,12 +77,14 @@ const uploadImage = async (req, res) => {
   await productImage.mv(imagePath);
   res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
-const uploadGiftsImage = async (req, res) => {
+const uploadGiftsImageToCloud = async (req, res) => {
+  // console.log(req.files);
+
   const result = await cloudinary.uploader.upload(
     req.files.image.tempFilePath,
     {
       use_filename: true,
-      folder: "becky_gifts", 
+      folder: "becky_gifts",
     }
   );
   // console.log(result);
@@ -99,5 +100,5 @@ module.exports = {
   deleteGift,
   updateGift,
   uploadImage,
-  uploadGiftsImage,
+  uploadGiftsImageToCloud,
 };
