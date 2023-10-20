@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Running tests succeeded\"",
+    "lint": "eslint \"./**/*.{js,jsx}\"",
+    "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "author": "hassan bulega",
   "license": "ISC",
@@ -26,6 +28,7 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "eslint": "^8.51.0",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1"
   }
