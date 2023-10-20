@@ -9,10 +9,11 @@ module.exports = {
     ecmaVersion: "latest",
   },
   rules: {
-    indent: ["error", 4],
-    "linebreak-style": ["error", "unix"],
-    quotes: [2, "single", { avoidEscape: true, allowTemplateLiterals: true }],
-    semi: ["error", "never"],
+    indent: 0,
+    "linebreak-style": 0,
+    quotes: [2, "double", { avoidEscape: true, allowTemplateLiterals: true }],
+    semi: ["error", "always"],
+    eqeqeq: "error",
     "no-unused-vars": "off",
   },
   overrides: [
