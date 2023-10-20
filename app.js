@@ -39,6 +39,9 @@ app.use(fileUpload({ useTempFiles: true }));
 app.get("/", (req, res) => {
   res.send('<h1>Gifts API</h1><a href="/api/v1/gifts">gifts route</a>');
 });
+app.get("/health", (req, res) => {
+  res.sendStatus(200).send("Health App");
+});
 // routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/gifts", giftsRouter);
