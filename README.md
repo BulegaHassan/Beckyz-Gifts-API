@@ -23,7 +23,7 @@ npm install && npm start
 
 #### File uploading
 - [express-fileupload](https://www.npmjs.com/package/express-fileupload)
-- [Cloudinary] (https://cloudinary.com/) , [cloudinary-npm](https://www.npmjs.com/package/cloudinary)
+- [Cloudinary](https://cloudinary.com/), [cloudinary-npm](https://www.npmjs.com/package/cloudinary)
 
 #### User Model
 **Extra Tasks done in the model**
