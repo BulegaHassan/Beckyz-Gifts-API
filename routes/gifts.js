@@ -10,9 +10,14 @@ const {
   updateGift,
   uploadImage,
   uploadGiftsImageToCloud,
+  deleteAllGifts,
 } = require("../controllers/gifts");
 
-router.route("/").get(getAllGifts).post(authenticateUser, CreateGift);
+router
+  .route("/")
+  .get(getAllGifts)
+  .post(authenticateUser, CreateGift)
+  .delete(authenticateUser, deleteAllGifts);
 router.route("/uploadImage").post(uploadImage);
 router
   .route("/uploadImageCloud")
