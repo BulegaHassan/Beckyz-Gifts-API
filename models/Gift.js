@@ -26,7 +26,15 @@ const GiftSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Please provide gift category"],
-      enum: ["flowers", "ceramics", "jewellery", "others"],
+      enum: [
+        "flowers",
+        "ceramics",
+        "jewellery",
+        "confectionaries",
+        "mixed",
+        "plants",
+        "others",
+      ],
     },
     inStock: {
       type: Boolean,
@@ -34,7 +42,6 @@ const GiftSchema = new mongoose.Schema(
     },
     colors: {
       type: [String],
-      default: ["pink"],
     },
     featured: {
       type: Boolean,
