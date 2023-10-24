@@ -32,7 +32,11 @@ const deleteGift = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ msg: `Deleted gift with id ${giftID}` });
 };
-
+const deleteAllGifts = async (req, res) => {
+  const { userID } = req.user;
+  const gifts = await Gift.deleteMany({});
+  res.status(StatusCodes.OK).json({ msg: `Deleted all gifts` });
+};
 const updateGift = async (req, res) => {
   const {
     body: { name, price, description, image, category },
@@ -101,4 +105,5 @@ module.exports = {
   updateGift,
   uploadImage,
   uploadGiftsImageToCloud,
+  deleteAllGifts,
 };
