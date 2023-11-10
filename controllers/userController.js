@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError,NotFoundError } = require("../errors");
-
+const {checkPermissions} = require('../utils')
 const getAllUsers = async (req, res) => {
     // console.log(req.user);
     const users = await User.find({ role: 'user' }).select('-password');  // removing password also
@@ -35,7 +35,7 @@ const updateUser = async (req, res) => {
 
   const token = user.createJWT();
     
-    res.status(StatusCodes.OK).json({ user,token });
+    res.status(StatusCodes.OK).json({ user: req.user,token });
 };
 
 const updateUserPassword = async (req, res) => {
@@ -43,7 +43,7 @@ const updateUserPassword = async (req, res) => {
     if (!oldPassword || !newPassword) {
         throw new BadRequestError('Please provide both passwords');
     }
-    const user = await User.findOne({ _id: req.user.userId });
+    const user = await User.findOne({ _id: req.user.userID });
 
     const isPasswordCorrect = await user.comparePassword(oldPassword);
     if (!isPasswordCorrect) {
@@ -70,7 +70,7 @@ module.exports = {
 //         throw new CustomError.BadRequestError('Please provide both email and password');
 //     }
 //     const user = await User.findOneAndUpdate(
-//         { _id: req.user.userId },
+//         { _id: req.user.userID },
 //         { name, email },
 //         { new: true, runValidators: true }
 //     );
