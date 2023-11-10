@@ -1,8 +1,8 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const { UnauthenticatedError } = require("../errors");
+const { UnauthenticatedError,UnauthorizedError } = require("../errors");
 
-const auth = async (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
   // check header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
@@ -13,11 +13,22 @@ const auth = async (req, res, next) => {
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     // attach the user to the gifts routes
-    req.user = { userID: payload.userID, name: payload.name };
+    req.user = { userID: payload.userID, name: payload.name, role: payload.role };
     next();
   } catch (error) {
     throw new UnauthenticatedError("Authentication invalid");
   }
 };
-
-module.exports = auth;
+const authorizePermissions = (req, res, next) => {
+  // in the route, no args passed
+  if (req.user.role !== "admin") {
+    throw new UnauthorizedError(
+      "Unauthorized to access this route"
+    );
+  }
+  next();
+};
+module.exports = {
+  authenticateUser,
+  authorizePermissions,
+};
