@@ -1,10 +1,19 @@
+## Gifts and More API
+- API for an ecommerce site
+- Its deployed on render
+- CI/CD with Github Actions, deploys and releases tag on succes
 #### Setup
-
+- Install packages
 ```bash
-npm install && npm start
+   npm install
 ```
+- Run the dev server
+```bash 
+   npm run dev
+```
+- For linting,fixing linting and test coverage, refer to scripts in the package.json file
 #### Postman docs
-- [postman docs] (https://documenter.getpostman.com/view/20917716/2s9YXk51wd)
+- [postman docs](https://documenter.getpostman.com/view/20917716/2s9YXk51wd)
 #### Database Connection
 
 1. Import connect.js
@@ -32,6 +41,7 @@ npm install && npm start
 - Password hashing
 - Token creation
 - Comparing password with bcrypt
+- Default role is user
 
 
 #### Register User
