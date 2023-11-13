@@ -3,7 +3,8 @@
 ```bash
 npm install && npm start
 ```
-
+#### Postman docs
+- [postman docs] (https://documenter.getpostman.com/view/20917716/2s9YXk51wd)
 #### Database Connection
 
 1. Import connect.js
@@ -13,8 +14,9 @@ npm install && npm start
 
 #### Routers
 
-- auth.js
-- gifts.js
+- auth
+- gifts
+- users
 
 #### Middleware
 
