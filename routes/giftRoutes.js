@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const authenticateUser = require("../middleware/authentication");
+const {
+  authenticateUser,
+  authorizePermissions,
+} = require("../middleware/authentication");
 
 const {
   getAllGifts,
@@ -11,7 +14,7 @@ const {
   uploadImage,
   uploadGiftsImageToCloud,
   deleteAllGifts,
-} = require("../controllers/gifts");
+} = require("../controllers/giftsController");
 
 router
   .route("/")

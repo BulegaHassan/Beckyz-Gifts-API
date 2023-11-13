@@ -4,8 +4,9 @@ const express = require("express");
 const app = express();
 const connectDB = require("./db/connect");
 const authenticateUser = require("./middleware/authentication");
-const giftsRouter = require("./routes/gifts");
-const authRouter = require("./routes/auth");
+const giftsRouter = require("./routes/giftRoutes");
+const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
 const morgan = require("morgan");
 
 // error handlers
@@ -44,6 +45,7 @@ app.get("/health", (req, res) => {
 });
 // routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 app.use("/api/v1/gifts", giftsRouter);
 
 // middleware
