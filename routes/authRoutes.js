@@ -9,7 +9,6 @@ const {
 } = require("../controllers/authController");
 router.post("/register", register);
 router.post("/login", login);
-router.get("/", getAdmins);
-router.delete("/", deleteUsers);
+
 
 module.exports = router;

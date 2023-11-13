@@ -6,7 +6,7 @@ const connectDB = require("./db/connect");
 const authenticateUser = require("./middleware/authentication");
 const giftsRouter = require("./routes/giftRoutes");
 const authRouter = require("./routes/authRoutes");
-const userRouter = require('./routes/userRoutes')
+const userRouter = require("./routes/userRoutes");
 const morgan = require("morgan");
 
 // error handlers

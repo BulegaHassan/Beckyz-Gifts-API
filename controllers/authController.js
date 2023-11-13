@@ -50,12 +50,5 @@ const login = async (req, res) => {
     token,
   });
 };
-const getAdmins = async (req, res) => {
-  const admins = await User.find({});
-  res.status(StatusCodes.OK).json({ admins, number: admins.length });
-};
-const deleteUsers = async (req, res) => {
-  const users = await User.deleteMany({});
-  res.status(StatusCodes.OK).json({ msg: `Users deleted` });
-};
-module.exports = { register, login, deleteUsers, getAdmins };
+
+module.exports = { register, login };
