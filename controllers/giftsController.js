@@ -6,9 +6,34 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
 const getAllGifts = async (req, res) => {
-  const gifts = await Gift.find({});
+  const { featured, name, category, numericFilters } = req.query;
+  const queryObject = {};
+  if (featured) {
+    queryObject.featured = featured === "true" ? true : false;
+  }
+  if (category) {
+    if (category.toLowerCase() === "all") {
+      // If category is "all" or not specified, return all categories
+      const distinctCategories = await Gift.distinct("category");
+      const gifts = await Gift.find(queryObject);
+      return res.status(StatusCodes.OK).json({ gifts, distinctCategories });
+    } else {
+      // If a specific category is specified, filter by that category
+      queryObject.category = category;
+    }
+  }
+  if (name) {
+    queryObject.name = { $regex: name, $options: "i" }; // i is case insestive
+  }
+
+  const gifts = await Gift.find(queryObject);
   res.status(StatusCodes.OK).json({ gifts, amount: gifts.length });
 };
+
+// const getFeaturedGiftsStatic = async (req, res) => {
+//   const gifts = await Gift.find({featured: true});
+//   res.status(StatusCodes.OK).json({ gifts, amount: gifts.length });
+// };
 const CreateGift = async (req, res) => {
   req.body.createdBy = req.user.userID;
   const gift = await Gift.create(req.body);
