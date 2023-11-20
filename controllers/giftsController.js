@@ -6,7 +6,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
 const getAllGifts = async (req, res) => {
-  const { featured, name, category, numericFilters } = req.query;
+  const { featured, name, category, sort, fields } = req.query;
   const queryObject = {};
   if (featured) {
     queryObject.featured = featured === "true" ? true : false;
@@ -25,13 +25,30 @@ const getAllGifts = async (req, res) => {
   if (name) {
     queryObject.name = { $regex: name, $options: "i" }; // i is case insestive
   }
+  let result = Gift.find(queryObject);
+  // sort
+  if (sort) {
+    const sortList = sort.split(",").join(" ");
+    result = result.sort(sortList);
+  } else {
+    result = result.sort("createdAt");
+  }
+  // select
+  if (fields) {
+    const fieldsList = fields.split(",").join(" ");
+    result = result.select(fieldsList);
+  }
 
-  const gifts = await Gift.find(queryObject);
+  const gifts = await result;
   res.status(StatusCodes.OK).json({ gifts, amount: gifts.length });
 };
 
-// const getFeaturedGiftsStatic = async (req, res) => {
-//   const gifts = await Gift.find({featured: true});
+// const getAllGiftsStatic = async (req, res) => {
+//   const gifts = await Gift.find({featured: true})
+        // .sort('name') // .sort('-name)  reverse sort
+        // .select('name category featured')
+        // .skip(1)
+        // .limit(11)
 //   res.status(StatusCodes.OK).json({ gifts, amount: gifts.length });
 // };
 const CreateGift = async (req, res) => {
