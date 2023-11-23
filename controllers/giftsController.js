@@ -12,15 +12,7 @@ const getAllGifts = async (req, res) => {
     queryObject.featured = featured === "true" ? true : false;
   }
   if (category) {
-    if (category.toLowerCase() === "all") {
-      // If category is "all" or not specified, return all categories
-      const distinctCategories = await Gift.distinct("category");
-      const gifts = await Gift.find(queryObject);
-      return res.status(StatusCodes.OK).json({ gifts, distinctCategories });
-    } else {
-      // If a specific category is specified, filter by that category
-      queryObject.category = category;
-    }
+    queryObject.category = category;
   }
   if (name) {
     queryObject.name = { $regex: name, $options: "i" }; // i is case insestive
@@ -48,10 +40,12 @@ const getAllGifts = async (req, res) => {
       }
     });
   }
-  console.log(queryObject);
+  // console.log(queryObject);
 
   let result = Gift.find(queryObject);
   const totalDocuments = await Gift.countDocuments(queryObject);
+  let distinctCategories = await Gift.find({}).distinct("category");
+  distinctCategories.unshift("all")
 
   // sort
   if (sort) {
@@ -82,6 +76,7 @@ const getAllGifts = async (req, res) => {
         pageCount: totalPages,
         total: totalDocuments,
       },
+      categories: distinctCategories || [],
     },
   });
 };
