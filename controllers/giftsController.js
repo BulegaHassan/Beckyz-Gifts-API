@@ -12,7 +12,18 @@ const getAllGifts = async (req, res) => {
     queryObject.featured = featured === "true" ? true : false;
   }
   if (category) {
-    queryObject.category = category;
+    if (category.toLowerCase() === "all") {
+      // If category is "all" or not specified, return all categories
+      const distinctCategories = await Gift.distinct("category");
+      const gifts = await Gift.find(queryObject);
+      return res.status(StatusCodes.OK).json({
+        gifts,
+        categories: distinctCategories,
+      });
+    } else {
+      // If a specific category is specified, filter by that category
+      queryObject.category = category;
+    }
   }
   if (name) {
     queryObject.name = { $regex: name, $options: "i" }; // i is case insestive
