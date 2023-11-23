@@ -6,27 +6,45 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
 const getAllGifts = async (req, res) => {
-  const { featured, name, category, sort, fields } = req.query;
+  const { featured, name, category, sort, fields, numericFilters } = req.query;
   const queryObject = {};
   if (featured) {
     queryObject.featured = featured === "true" ? true : false;
   }
   if (category) {
-    if (category.toLowerCase() === "all") {
-      // If category is "all" or not specified, return all categories
-      const distinctCategories = await Gift.distinct("category");
-      const gifts = await Gift.find(queryObject);
-      return res.status(StatusCodes.OK).json({ gifts, distinctCategories });
-    } else {
-      // If a specific category is specified, filter by that category
-      queryObject.category = category;
-    }
+    queryObject.category = category;
   }
   if (name) {
     queryObject.name = { $regex: name, $options: "i" }; // i is case insestive
   }
+  // numeric filters eg price, rating
+  if (numericFilters) {
+    const operatorMap = {
+      ">": "$gt",
+      ">=": "$gte",
+      "=": "$eq",
+      "<": "$lt",
+      "<=": "$lte",
+    };
+    const regEx = /\b(<|>|>=|=|<|<=)\b/g;
+    let filters = numericFilters.replace(
+      regEx,
+      (match) => `-${operatorMap[match]}-`
+    );
+    console.log(filters);
+    const options = ["price", "rating"];
+    filters = filters.split(",").forEach((item) => {
+      const [field, operator, value] = item.split("-");
+      if (options.includes(field)) {
+        queryObject[field] = { [operator]: Number(value) };
+      }
+    });
+  }
+  // console.log(queryObject);
+
   let result = Gift.find(queryObject);
   const totalDocuments = await Gift.countDocuments(queryObject);
+  const distinctCategories = await Gift.find({}).distinct("category");
 
   // sort
   if (sort) {
@@ -57,6 +75,7 @@ const getAllGifts = async (req, res) => {
         pageCount: totalPages,
         total: totalDocuments,
       },
+      categories: distinctCategories || [],
     },
   });
 };

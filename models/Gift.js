@@ -33,7 +33,7 @@ const GiftSchema = new mongoose.Schema(
         "confectionaries",
         "mixed",
         "plants",
-        "others",
+        "others"
       ],
     },
     inStock: {
