@@ -45,8 +45,7 @@ const getAllGifts = async (req, res) => {
   let result = Gift.find(queryObject);
   const totalDocuments = await Gift.countDocuments(queryObject);
   let distinctCategories = await Gift.find({}).distinct("category");
-  distinctCategories.unshift("all")
-  const distinctCategories = await Gift.find({}).distinct("category");
+  distinctCategories.unshift("all");
 
   // sort
   if (sort) {
